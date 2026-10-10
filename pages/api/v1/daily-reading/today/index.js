@@ -24,7 +24,7 @@ async function postTodayReadingHandler(request, response) {
   }
 
   if (action === "set_start_date" && start_date) {
-    const updatedStartDate = await dailyReading.setPlanStartDate(start_date)
+    await dailyReading.setPlanStartDate(start_date)
     const today = await dailyReading.getTodayReading()
     return response.status(200).json(today)
   }

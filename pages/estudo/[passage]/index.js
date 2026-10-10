@@ -179,7 +179,6 @@ export default function EstudoPassagemPage() {
   }
 
   const currentStepData = STEPS_DATA[activeStep - 1]
-  const completedCount = Object.values(notes).filter((n) => n.trim().length > 0).length
 
   return (
     <>

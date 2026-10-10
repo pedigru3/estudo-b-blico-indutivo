@@ -273,6 +273,10 @@ export default function DesignSystemPage() {
                     Loading
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+          </section>
+
           {/* Icons System Section */}
           <section className="flex flex-col gap-4">
             <SectionHeader title="4. Família de Ícones (Grid 24x24 • Traço 1.5px • Outline & Filled)" />
