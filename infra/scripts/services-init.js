@@ -1,0 +1,48 @@
+const { spawn } = require("node:child_process")
+
+function runCommand(command, args) {
+  return new Promise((resolve, reject) => {
+    const proc = spawn(command, args, { stdio: "inherit", shell: true })
+    proc.on("exit", (code) => (code === 0 ? resolve() : reject(code)))
+  })
+}
+
+let servicesAreRunning = false
+
+async function startServicesAndDev() {
+  try {
+    await runCommand("npm", ["run", "services:up"])
+    servicesAreRunning = true
+
+    await runCommand("npm", ["run", "services:wait:database"])
+
+    await runCommand("npm", ["run", "migrations:up"])
+
+    const nextProcess = spawn("npx", ["next", "dev"], {
+      stdio: "inherit",
+      shell: true,
+    })
+
+    nextProcess.on("exit", async (code) => {
+      await stopServices()
+      process.exit(code)
+    })
+
+    process.on("SIGINT", () => {
+      console.log("\nRecebido Ctrl+C. Finalizando...")
+      nextProcess.kill("SIGINT")
+    })
+  } catch (err) {
+    await stopServices()
+    process.exit(typeof err === "number" ? err : 1)
+  }
+}
+
+async function stopServices() {
+  if (servicesAreRunning) {
+    await runCommand("npm", ["run", "services:down"])
+    servicesAreRunning = false
+  }
+}
+
+startServicesAndDev()

@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "next/core-web-vitals",
+    "prettier"
+  ],
+  "env": {
+    "es2022": true,
+    "node": true,
+    "jest": true
+  },
+  "rules": {
+    "no-undef": "error",
+    "no-unused-vars": "warn"
+  }
+}
