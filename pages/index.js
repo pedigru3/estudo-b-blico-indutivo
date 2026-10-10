@@ -19,6 +19,7 @@ import {
   Text,
   SectionHeader,
   SparkleStar,
+  BookmarkIcon,
   LookUpIcon,
   LookDownIcon,
   QuestionIcon,
@@ -134,12 +135,11 @@ export default function HomePage() {
             <div className="flex items-center justify-between text-xs font-bold tracking-widest text-[#162235] uppercase">
               <span>ESTUDO BÍBLICO INDUTIVO</span>
               <div className="flex items-center gap-4 lowercase font-normal tracking-normal text-[#7B878E]">
-               
                 <Link
-                  href="/estudo"
+                  href="/estudos"
                   className="hover:text-[#3266F1] flex items-center gap-1 transition-colors"
                 >
-                  <BookOpenText className="w-3.5 h-3.5" /> Estudo
+                  <BookmarkIcon size={14} /> meus estudos
                 </Link>
               </div>
             </div>

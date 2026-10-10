@@ -3,7 +3,7 @@ import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowRight, SlidersHorizontal, Keyboard } from "lucide-react"
-import { Button, Heading, Text, Input, BibleIcon, SparkleStar } from "@/components/ui"
+import { Button, Heading, Input, BibleIcon, BookmarkIcon, SparkleStar } from "@/components/ui"
 import { BIBLE_BOOKS } from "@/models/bible"
 
 export default function EstudoHomePage() {
@@ -82,9 +82,12 @@ export default function EstudoHomePage() {
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao início
           </Link>
-          <span className="text-[11px] font-bold tracking-widest text-[#59656C] uppercase">
-            ESTUDO BÍBLICO
-          </span>
+          <Link
+            href="/estudos"
+            className="text-xs text-[#7B878E] hover:text-[#3266F1] flex items-center gap-1.5 transition-colors font-medium"
+          >
+            <BookmarkIcon size={14} /> Meus Estudos
+          </Link>
         </header>
 
         {/* Centro: Formulário Super Clean & Focado */}

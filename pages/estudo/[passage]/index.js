@@ -8,7 +8,6 @@ import {
   Heading,
   Text,
   Textarea,
-  Badge,
   CheckIcon,
   ShareIcon,
   BookmarkIcon,
@@ -90,7 +89,10 @@ export default function EstudoPassagemPage() {
       if (saved) {
         setNotes(JSON.parse(saved))
       }
-    } catch {}
+    } catch (error) {
+      console.log("Ocorreu erro ao carregar notas de estudo")
+      console.log(error)
+    }
   }, [passage])
 
   // Busca o texto bíblico
@@ -126,7 +128,9 @@ export default function EstudoPassagemPage() {
       const updated = { ...prev, [stepNumber]: value }
       try {
         localStorage.setItem(`estudo_notas_${passage}`, JSON.stringify(updated))
-      } catch {}
+      } catch (error) {
+        console.log(error)
+      }
       return updated
     })
   }
@@ -152,6 +156,28 @@ export default function EstudoPassagemPage() {
     setTimeout(() => setCopiedSummary(false), 2500)
   }
 
+  function handleCompleteStudy() {
+    const studyItem = {
+      id: `${passage}_${Date.now()}`,
+      passage: bibleData?.reference || passage,
+      notes,
+      completedAt: new Date().toISOString(),
+    }
+    try {
+      const currentList = JSON.parse(localStorage.getItem("meus_estudos") || "[]")
+      const list = Array.isArray(currentList) ? currentList : []
+      const passageRef = (bibleData?.reference || passage).toLowerCase().trim()
+      const filtered = list.filter(
+        (s) => s.passage?.toLowerCase().trim() !== passageRef
+      )
+      localStorage.setItem("meus_estudos", JSON.stringify([studyItem, ...filtered]))
+    } catch(error) {
+      console.log("Ocorreu erro ao completar estudo")
+      console.log(error)
+    }
+    router.push("/estudos")
+  }
+
   const currentStepData = STEPS_DATA[activeStep - 1]
   const completedCount = Object.values(notes).filter((n) => n.trim().length > 0).length
 
@@ -165,17 +191,23 @@ export default function EstudoPassagemPage() {
         <div className="max-w-3xl mx-auto flex flex-col gap-8">
           {/* Header Superior Limpo */}
           <header className="flex items-center justify-between pb-4 border-b border-[#E7E9EA]">
-            <Link
-              href="/estudo"
-              className="text-xs text-[#7B878E] hover:text-[#3266F1] flex items-center gap-1.5 transition-colors font-medium"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> Escolher outra passagem
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/estudo"
+                className="text-xs text-[#7B878E] hover:text-[#3266F1] flex items-center gap-1.5 transition-colors font-medium"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Outra passagem
+              </Link>
+              <span className="text-[#E7E9EA]">|</span>
+              <Link
+                href="/estudos"
+                className="text-xs text-[#7B878E] hover:text-[#3266F1] flex items-center gap-1 transition-colors font-medium"
+              >
+                <BookmarkIcon size={14} /> Meus Estudos
+              </Link>
+            </div>
 
             <div className="flex items-center gap-2">
-              <Badge variant={completedCount === 5 ? "success" : "neutral"} className="text-xs">
-                {completedCount} de 5 etapas
-              </Badge>
               <Button
                 variant="outline"
                 size="sm"
@@ -333,7 +365,7 @@ export default function EstudoPassagemPage() {
                   variant="success"
                   size="sm"
                   leftIcon={BookmarkIcon}
-                  onClick={handleCopySummary}
+                  onClick={handleCompleteStudy}
                   className="text-xs"
                 >
                   Concluir Estudo
